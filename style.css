@@ -15,7 +15,7 @@ body {
     min-height: 100vh;
 }
 
-#board, #turn, #log, #player-one, #player-two, .start {
+#board, #player-one, #player-two, .start {
     background-color: white;
 }
 
@@ -24,8 +24,11 @@ body > * + * {
 }
 
 #turn, #log {
-    border: 2px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    background-color: rgb(255, 255, 197);
     font-size: 1.3rem;
+    font-weight: 900;
     padding: 10px 20px;
     display: flex;
     justify-content: center;
@@ -68,13 +71,15 @@ body > * + * {
 .start {
     display: block;
     margin: 10px auto;
-}
-
-.start {
     font-size: 1.3rem;
     border: 2px solid black;
     border-radius: 10px;
     padding: 5px 10px;
+}
+
+.start:hover,
+.cell:enabled:hover {
+    background-color: rgb(216, 216, 216);
 }
 
 .edit-name,
@@ -83,6 +88,11 @@ body > * + * {
     border: 2px solid black;
     border-radius: 10px;
     padding: 5px 10px;
+}
+
+.edit-name:enabled:hover,
+.name-form > button:hover {
+    background-color: skyblue;
 }
 
 #player-one, #player-two {
@@ -105,8 +115,11 @@ body > * + * {
 .form-label > input {
     margin-left: 5px;
     width: 120px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 .name-form > p {
     font-size: 0.8rem;
 }
+

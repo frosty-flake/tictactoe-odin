@@ -28,7 +28,7 @@ const Gameboard = (function() {
     }
 
     const checkEmptyCell = (position) => {
-        return (checkValidCell(position) && (getCellTokenByPosition(position) === "_"));
+        return (checkValidCell(position) && (getCellTokenByPosition(position) === ""));
     }
 
     const getCellTokenByPosition = (position) => {
@@ -43,7 +43,7 @@ const Gameboard = (function() {
     const refreshBoard = () => {
         for (let row of board) {
             for (let cell of row) {
-                cell.placeToken("_");
+                cell.placeToken("");
             }
         }
     }
@@ -54,7 +54,7 @@ const Gameboard = (function() {
 })();
 
 function BoardCell() {
-    let cellToken = "_";
+    let cellToken = "";
     
     const placeToken = (player) => {
         cellToken = player;
