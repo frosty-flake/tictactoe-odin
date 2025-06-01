@@ -155,18 +155,28 @@ const ui = (function() {
 
         const currentBoard = game.getBoard();
         const currentPlayer = game.getActivePlayer();
-        for (let row of currentBoard) {
-            for (let cell of row) {
-                const cellDiv = document.createElement("div");
+        for (let row = 1; row < 4; row++) {
+            for (let col = 1; col < 4; col++) {
+                const cell = currentBoard[row - 1][col - 1];
+                const cellDiv = document.createElement("button");
+                cellDiv.classList.add("cell");
+                cellDiv.dataset.row = row;
+                cellDiv.dataset.col = col;
                 cellDiv.textContent = cell.getCellToken();
+                cellDiv.addEventListener("click", placeTokenOnClick);
                 boardDiv.appendChild(cellDiv);
             }
         }
 
         playerTurnTracker.textContent = `${currentPlayer.name}'s turn!`;
+    };
 
-        
+    const placeTokenOnClick = (e) => {
+        const row = e.target.dataset.row;
+        const col = e.target.dataset.col;
 
+        game.playRound([row, col]);
+        updateScreen();
     };
 
     updateScreen();

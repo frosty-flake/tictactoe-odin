@@ -19,7 +19,7 @@ div {
     align-items: center;
 }
 
-#board > div {
+#board > button {
     width: 95%;
     height: 95%;
     font-size: 5rem;
