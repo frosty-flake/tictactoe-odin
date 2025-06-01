@@ -3,4 +3,4 @@
 This Javascript project for The Odin Project is a simple tic-tac-toe game. The goal of the project
 is to practice using factory functions.
 
-[Live Site URL](frosty-flake.github.io/tictactoe-odin)
+[Live Site URL](https://frosty-flake.github.io/tictactoe-odin/)
