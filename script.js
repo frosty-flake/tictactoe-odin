@@ -231,20 +231,31 @@ const ui = (function() {
     startButton.addEventListener("click", startGame);
 
     const editName = (e) => {
+        const editButton = e.target;
+        editButton.disabled = true;
         const playerDiv = e.target.parentElement;
         const formDiv = document.createElement("form");
         const formLabel = document.createElement("label");
         const formInput = document.createElement("input");
+        const formDescription = document.createElement("p");
         const formSubmit = document.createElement("button");
 
-        formLabel.textContent = "Name: ";
+        formDiv.classList.add("name-form");
+        formLabel.classList.add("form-label");
+
+        formDescription.textContent = "10 characters or less"
+        
+        formLabel.textContent = "Name:";
         formLabel.setAttribute("for", "name");
 
         formInput.id = "name";
+        formInput.setAttribute("maxlength", "10");
+        formInput.setAttribute("minlength", "1");
 
         formSubmit.textContent = "Submit";
 
         const submitName = (e) => {
+            if (formInput.value.length === 0) return;
             e.preventDefault();
             let playerToEdit = playerDiv.id;
             if (playerToEdit === "player-one") {
@@ -254,13 +265,15 @@ const ui = (function() {
             }
             const playerNameDiv = playerDiv.querySelector(".player-name");
             playerNameDiv.textContent = formInput.value;
+            editButton.disabled = false;
             playerDiv.removeChild(playerDiv.lastChild);
         }   
 
         formSubmit.addEventListener("click", submitName);
 
         formDiv.appendChild(formLabel); 
-        formDiv.appendChild(formInput);
+        formLabel.appendChild(formInput);
+        formDiv.appendChild(formDescription);
         formDiv.appendChild(formSubmit);
         playerDiv.appendChild(formDiv);
     }
