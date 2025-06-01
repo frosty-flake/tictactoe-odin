@@ -12,8 +12,8 @@ const Gameboard = (function() {
 
     const getBoard = () => board;
 
+    // function to play in console
     const printBoard = () => {
-        let consoleBoard = [];
         for (let row of board) {
             const consoleBoardRow = [];
             for (let cell of row) {
@@ -23,18 +23,37 @@ const Gameboard = (function() {
         };
     }
 
+    const checkValidCell = (position) => {
+        return !(position[0] > 3 || position[0] < 1 || position[1] > 3 || position[1] < 1);
+    }
+
+    const checkEmptyCell = (position) => {
+        return (checkValidCell(position) && (getCellTokenByPosition(position) === "_"));
+    }
+
+    const getCellTokenByPosition = (position) => {
+        if (!checkValidCell(position)) return false;
+        return board[position[0] - 1][position[1] - 1].getCellToken();
+    }
+
     const placeTokenOnBoard = (position, player) => {
-        let cell = board[position[0]][position[1]];
-        if (cell.getCellToken() === "_") {
-            cell.placeToken(player);
+        if (checkEmptyCell(position)) board[position[0] - 1][position[1] - 1].placeToken(player);
+    }
+
+    const refreshBoard = () => {
+        for (let row of board) {
+            for (let cell of row) {
+                cell.placeToken("_");
+            }
         }
     }
 
-    return {getBoard, printBoard, placeTokenOnBoard};
+    return {getBoard, printBoard, placeTokenOnBoard, 
+        checkEmptyCell, checkValidCell, getCellTokenByPosition,
+        refreshBoard};
 })();
 
 function BoardCell() {
-
     let cellToken = "_";
     
     const placeToken = (player) => {
@@ -45,3 +64,82 @@ function BoardCell() {
 
     return {placeToken, getCellToken};
 };
+
+function createPlayer(name, turn) {
+    const token = turn === 1 ? "X" : "O";
+
+    return {name, token};
+}
+
+const gameController = (function(
+    playerOne = createPlayer("Player One", 1), 
+    playerTwo = createPlayer("Player Two", 2)) {
+    
+    const board = Gameboard;
+
+    activePlayer = playerOne;
+
+    const switchActivePlayer = function() {
+        activePlayer = (activePlayer === playerOne) ? playerTwo : playerOne;
+    };
+
+    // function to play in console.
+    const printNextRound = function() {
+        board.printBoard();
+        console.log(`It is ${activePlayer.name}'s turn.`)
+    }
+
+    const playRound = function(position) {
+        if (!board.checkEmptyCell(position)) {
+            console.log(`Cell (${position[0]}, ${position[1]}) is not valid!`);
+            return;
+        }
+
+        board.placeTokenOnBoard(position, activePlayer.token);
+        console.log(`${activePlayer.name} placed ${activePlayer.token} at (${position[0]}, ${position[1]})!`)
+        board.printBoard();
+
+        // Check if placed piece gives a win
+        const listOfPositions = [[1, 1], [1, 2], [1, 3],
+                                 [2, 1], [2, 2], [2, 3],
+                                 [3, 1], [3, 2], [3, 3]];
+        const [c1, c2, c3, c4, c5, c6, c7, c8, c9] = listOfPositions;
+        const listOfPossibleWins = [[c1, c2, c3], [c4, c5, c6], [c7, c8, c9],
+                                    [c1, c4, c7], [c2, c5, c8], [c3, c6, c9],
+                                    [c1, c5, c9], [c3, c5, c7]];
+        let activeToken = activePlayer.token;
+        for (let row of listOfPossibleWins) {
+            if ((board.getCellTokenByPosition(row[0]) === activeToken &&
+                    board.getCellTokenByPosition(row[1]) === activeToken &&
+                    board.getCellTokenByPosition(row[2]) === activeToken)) {
+                        console.log(`${activePlayer.name} wins!`);
+                        board.refreshBoard();
+                        return;
+                    }
+            }
+
+        // Check if it is a draw (if board is full)
+        let checksum = 0;
+
+        for (let pos of listOfPositions) {
+            if (board.checkEmptyCell(pos)) break;
+            checksum += 1;
+        }
+        
+        if (checksum === 9) {
+            console.log(`It is a draw!`);
+            board.refreshBoard();
+            return;
+        }
+
+
+        switchActivePlayer();
+        console.log(`It is ${activePlayer.name}'s turn.`)
+    };
+
+    const getActivePlayer = () => activePlayer;
+
+    printNextRound();
+
+    return {board, playRound, getActivePlayer};
+})();
