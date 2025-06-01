@@ -134,14 +134,13 @@ const game = (function(
         console.log(`${activePlayer.name} placed ${activePlayer.token} at (${position[0]}, ${position[1]})!`)
         board.printBoard();
 
-        // Check if placed piece gives a win
         switch (getGameState()) {
             case "win":
                 console.log(`${activePlayer.name} wins!`);
-                return;
+                return "win";
             case "draw":
                 console.log(`It is a draw!`);
-                return;
+                return "draw";
         }
 
         switchActivePlayer();
@@ -158,7 +157,7 @@ const game = (function(
 const ui = (function() {
     const playerTurnTracker = document.querySelector("#turn");
     const boardDiv = document.querySelector("#board");
-    const logDiv = document.querySelector("log");
+    const logDiv = document.querySelector("#log");
 
     const updateScreen = () => {
 
@@ -166,6 +165,7 @@ const ui = (function() {
 
         const currentBoard = game.getBoard();
         const currentPlayer = game.getActivePlayer();
+
         for (let row = 1; row < 4; row++) {
             for (let col = 1; col < 4; col++) {
                 const cell = currentBoard[row - 1][col - 1];
@@ -186,8 +186,26 @@ const ui = (function() {
         const row = e.target.dataset.row;
         const col = e.target.dataset.col;
 
-        game.playRound([row, col]);
+        let gameResult = game.playRound([row, col]);
+
         updateScreen();
+
+        const currentPlayer = game.getActivePlayer();
+        const boardButtons = boardDiv.querySelectorAll(".cell");
+
+        if (gameResult === "win") {
+            logDiv.textContent = `${currentPlayer.name} wins!`;
+            boardButtons.forEach((button) => {
+                button.disabled = true;
+            })
+            return;
+        } else if (gameResult === "draw") {
+            logDiv.textContent = `It's a draw...`
+            boardButtons.forEach((button) => {
+                button.disabled = true;
+            })
+            return;
+        }
     };
 
     updateScreen();
