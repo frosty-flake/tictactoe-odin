@@ -1,38 +1,88 @@
 * {
     margin: 0; padding: 0;
     box-sizing: border-box;
-
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-#board, #turn, #log, #player-one, #player-two {
-    margin: 20px auto;
+:root {
+    --blue: rgb(186, 236, 255);
+}
+
+body {
+    background-color: var(--blue);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#board, #turn, #log, #player-one, #player-two, .start {
+    background-color: white;
+}
+
+body > * + * {
+    margin-top: 10px;
+}
+
+#turn, #log {
     border: 2px solid black;
+    font-size: 1.3rem;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-}
-
-#board {
-    width: 400px;
-    height: 400px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    flex: 1;
     justify-items: center;
     align-items: center;
 }
 
-#board > button {
-    width: 95%;
-    height: 95%;
+#board {
+    width: max(300px, 30vw);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    gap: 2px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 2px solid black;
+    background-color: black;
+    justify-items: center;
+    align-items: center;
+}
+
+.cell {
+    width: 100%;
+    height: 100%;
     font-size: 5rem;
-    border: 1px dashed red;
     text-align: center;
+    border: none;
+    background-color: white;
 }
 
 .start {
     display: block;
     margin: 10px auto;
+}
+
+.start {
+    font-size: 1.3rem;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.edit-name {
+    background-color: var(--blue);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+#player-one, #player-two {
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 20px;
 }
