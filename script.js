@@ -68,7 +68,12 @@ function BoardCell() {
 function createPlayer(name, turn) {
     const token = turn === 1 ? "X" : "O";
 
-    return {name, token};
+    let score = 0;
+
+    const getScore = () => score;
+    const upScore = () => score++;
+
+    return {name, token, getScore, upScore};
 }
 
 const game = (function(
@@ -77,7 +82,7 @@ const game = (function(
     
     const board = Gameboard;
 
-    activePlayer = playerOne;
+    let activePlayer = playerOne;
 
     const switchActivePlayer = () => {
         activePlayer = (activePlayer === playerOne) ? playerTwo : playerOne;

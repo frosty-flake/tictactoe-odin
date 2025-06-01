@@ -4,9 +4,14 @@
 
 }
 
-div {
+#board, #turn, #log, #player-one, #player-two {
     margin: 20px auto;
     border: 2px solid black;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
 }
 
 #board {
