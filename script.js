@@ -163,12 +163,13 @@ const ui = (function() {
     const boardDiv = document.querySelector("#board");
     const logDiv = document.querySelector("#log");
 
-    const updateScreen = () => {
+    let playerOne = createPlayer("Player One", 1);
+    let playerTwo = createPlayer("Player Two", 2);
 
+    const updateBoard = () => {
         boardDiv.textContent = "";
 
         const currentBoard = game.getBoard();
-        const currentPlayer = game.getActivePlayer();
 
         for (let row = 1; row < 4; row++) {
             for (let col = 1; col < 4; col++) {
@@ -182,8 +183,16 @@ const ui = (function() {
                 boardDiv.appendChild(cellDiv);
             }
         }
+    }
 
+    const updateTracker = () => {
+        const currentPlayer = game.getActivePlayer();
         playerTurnTracker.textContent = `${currentPlayer.name}'s turn!`;
+    }
+
+    const updateScreen = () => {
+        updateBoard();
+        updateTracker();
     };
 
     const placeTokenOnClick = (e) => {
@@ -212,12 +221,58 @@ const ui = (function() {
         }
     };
 
-    const startGame = (e) => {
+    const startGame = () => {
         game.refreshBoard();
-        game = createGame(playerOne = createPlayer("Player One", 1), playerTwo = createPlayer("Player Two", 2));
+        game = createGame(playerOne, playerTwo);
         updateScreen();
     }
 
     const startButton = document.querySelector(".start");
     startButton.addEventListener("click", startGame);
+
+    const editName = (e) => {
+        const playerDiv = e.target.parentElement;
+        const formDiv = document.createElement("form");
+        const formLabel = document.createElement("label");
+        const formInput = document.createElement("input");
+        const formSubmit = document.createElement("button");
+
+        formLabel.textContent = "Name: ";
+        formLabel.setAttribute("for", "name");
+
+        formInput.id = "name";
+
+        formSubmit.textContent = "Submit";
+
+        const submitName = (e) => {
+            e.preventDefault();
+            let playerToEdit = playerDiv.id;
+            if (playerToEdit === "player-one") {
+                playerOne = createPlayer(formInput.value, 1);
+            } else {
+                playerTwo = createPlayer(formInput.value, 2);
+            }
+            const playerNameDiv = playerDiv.querySelector(".player-name");
+            playerNameDiv.textContent = formInput.value;
+            playerDiv.removeChild(playerDiv.lastChild);
+        }   
+
+        formSubmit.addEventListener("click", submitName);
+
+        formDiv.appendChild(formLabel); 
+        formDiv.appendChild(formInput);
+        formDiv.appendChild(formSubmit);
+        playerDiv.appendChild(formDiv);
+    }
+
+    const editButtons = document.querySelectorAll(".edit-name");
+    editButtons.forEach((button) => {
+        button.addEventListener("click", editName);
+    });
+
+    updateBoard();
+    const boardButtons = boardDiv.querySelectorAll(".cell");
+    boardButtons.forEach((button) => {
+        button.disabled = true;
+    })
 })();
