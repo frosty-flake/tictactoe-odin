@@ -89,6 +89,41 @@ const game = (function(
         console.log(`It is ${activePlayer.name}'s turn.`)
     }
 
+    const getGameState = ()=> {
+    // Check if placed piece gives a win
+    const listOfPositions = [[1, 1], [1, 2], [1, 3],
+                                [2, 1], [2, 2], [2, 3],
+                                [3, 1], [3, 2], [3, 3]];
+
+    const [c1, c2, c3, c4, c5, c6, c7, c8, c9] = listOfPositions;
+
+    const listOfPossibleWins = [[c1, c2, c3], [c4, c5, c6], [c7, c8, c9],
+                                [c1, c4, c7], [c2, c5, c8], [c3, c6, c9],
+                                [c1, c5, c9], [c3, c5, c7]];
+
+    let activeToken = activePlayer.token;
+
+    for (let row of listOfPossibleWins) {
+        if ((board.getCellTokenByPosition(row[0]) === activeToken &&
+                board.getCellTokenByPosition(row[1]) === activeToken &&
+                board.getCellTokenByPosition(row[2]) === activeToken)) {
+                    return "win";
+                }
+        }
+
+    // Check if it is a draw (if board is full)
+    let checksum = 0;
+
+    for (let pos of listOfPositions) {
+        if (board.checkEmptyCell(pos)) break;
+        checksum += 1;
+    }
+    
+    if (checksum === 9) return "draw";
+
+    return "continue";
+    };
+
     const playRound =(position) => {
         if (!board.checkEmptyCell(position)) {
             console.log(`Cell (${position[0]}, ${position[1]}) is not valid!`);
@@ -100,38 +135,14 @@ const game = (function(
         board.printBoard();
 
         // Check if placed piece gives a win
-        const listOfPositions = [[1, 1], [1, 2], [1, 3],
-                                 [2, 1], [2, 2], [2, 3],
-                                 [3, 1], [3, 2], [3, 3]];
-        const [c1, c2, c3, c4, c5, c6, c7, c8, c9] = listOfPositions;
-        const listOfPossibleWins = [[c1, c2, c3], [c4, c5, c6], [c7, c8, c9],
-                                    [c1, c4, c7], [c2, c5, c8], [c3, c6, c9],
-                                    [c1, c5, c9], [c3, c5, c7]];
-        let activeToken = activePlayer.token;
-        for (let row of listOfPossibleWins) {
-            if ((board.getCellTokenByPosition(row[0]) === activeToken &&
-                    board.getCellTokenByPosition(row[1]) === activeToken &&
-                    board.getCellTokenByPosition(row[2]) === activeToken)) {
-                        console.log(`${activePlayer.name} wins!`);
-                        board.refreshBoard();
-                        return;
-                    }
-            }
-
-        // Check if it is a draw (if board is full)
-        let checksum = 0;
-
-        for (let pos of listOfPositions) {
-            if (board.checkEmptyCell(pos)) break;
-            checksum += 1;
+        switch (getGameState()) {
+            case "win":
+                console.log(`${activePlayer.name} wins!`);
+                return;
+            case "draw":
+                console.log(`It is a draw!`);
+                return;
         }
-        
-        if (checksum === 9) {
-            console.log(`It is a draw!`);
-            board.refreshBoard();
-            return;
-        }
-
 
         switchActivePlayer();
         console.log(`It is ${activePlayer.name}'s turn.`)
