@@ -76,9 +76,8 @@ function createPlayer(name, turn) {
     return {name, token, getScore, upScore};
 }
 
-const game = (function(
-    playerOne = createPlayer("Player One", 1), 
-    playerTwo = createPlayer("Player Two", 2)) {
+const createGame = (playerOne, 
+                    playerTwo) => {
     
     const board = Gameboard;
 
@@ -154,10 +153,10 @@ const game = (function(
 
     const getActivePlayer = () => activePlayer;
 
-    printNextRound();
-
     return Object.assign({}, board, {playRound, getActivePlayer});
-})();
+};
+
+let game = createGame(createPlayer("Player One", 1), createPlayer("Player Two", 2));
 
 const ui = (function() {
     const playerTurnTracker = document.querySelector("#turn");
@@ -213,7 +212,12 @@ const ui = (function() {
         }
     };
 
-    updateScreen();
+    const startGame = (e) => {
+        game.refreshBoard();
+        game = createGame(playerOne = createPlayer("Player One", 1), playerTwo = createPlayer("Player Two", 2));
+        updateScreen();
+    }
 
-    return{updateScreen};
+    const startButton = document.querySelector(".start");
+    startButton.addEventListener("click", startGame);
 })();

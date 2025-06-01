@@ -31,3 +31,8 @@
     border: 1px dashed red;
     text-align: center;
 }
+
+.start {
+    display: block;
+    margin: 10px auto;
+}
