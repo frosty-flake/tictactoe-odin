@@ -71,7 +71,7 @@ function createPlayer(name, turn) {
     return {name, token};
 }
 
-const gameController = (function(
+const game = (function(
     playerOne = createPlayer("Player One", 1), 
     playerTwo = createPlayer("Player Two", 2)) {
     
@@ -79,17 +79,17 @@ const gameController = (function(
 
     activePlayer = playerOne;
 
-    const switchActivePlayer = function() {
+    const switchActivePlayer = () => {
         activePlayer = (activePlayer === playerOne) ? playerTwo : playerOne;
     };
 
-    // function to play in console.
-    const printNextRound = function() {
+    // function to play in console
+    const printNextRound = () => {
         board.printBoard();
         console.log(`It is ${activePlayer.name}'s turn.`)
     }
 
-    const playRound = function(position) {
+    const playRound =(position) => {
         if (!board.checkEmptyCell(position)) {
             console.log(`Cell (${position[0]}, ${position[1]}) is not valid!`);
             return;
@@ -141,5 +141,35 @@ const gameController = (function(
 
     printNextRound();
 
-    return {board, playRound, getActivePlayer};
+    return Object.assign({}, board, {playRound, getActivePlayer});
+})();
+
+const ui = (function() {
+    const playerTurnTracker = document.querySelector("#turn");
+    const boardDiv = document.querySelector("#board");
+    const logDiv = document.querySelector("log");
+
+    const updateScreen = () => {
+
+        boardDiv.textContent = "";
+
+        const currentBoard = game.getBoard();
+        const currentPlayer = game.getActivePlayer();
+        for (let row of currentBoard) {
+            for (let cell of row) {
+                const cellDiv = document.createElement("div");
+                cellDiv.textContent = cell.getCellToken();
+                boardDiv.appendChild(cellDiv);
+            }
+        }
+
+        playerTurnTracker.textContent = `${currentPlayer.name}'s turn!`;
+
+        
+
+    };
+
+    updateScreen();
+
+    return{updateScreen};
 })();

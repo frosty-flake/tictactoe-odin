@@ -1,0 +1,28 @@
+* {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+
+}
+
+div {
+    margin: 20px auto;
+    border: 2px solid black;
+}
+
+#board {
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+#board > div {
+    width: 95%;
+    height: 95%;
+    font-size: 5rem;
+    border: 1px dashed red;
+    text-align: center;
+}
